@@ -12,7 +12,7 @@ const NameSchema = new Schema({
 		type: String,
 		require: true,
 	},
-	openid: {
+	openId: {
 		type: String,
 		require:true,
 	}

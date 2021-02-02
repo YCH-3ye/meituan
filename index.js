@@ -35,7 +35,7 @@ app.use(router.allowedMethods())
 
 
 
-//引入optimiz文件里的路由
+// 引入optimiz文件里的路由
 const banner = require('./routes/backend/optimiz.js')
 
 // 注册路由中间件
