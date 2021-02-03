@@ -9,7 +9,15 @@ const router = require('koa-router')()
 mongoose.set('useFindAndModify', false)
 // 引用数据库
 const mburl = require('./config/base.js').mburl
+
+// 全局异常处理
+const abnormal = require('./config/abnormal')
+
 console.log(mburl)
+
+app.use(json())
+app.use(bodyParser())
+app.use(abnormal)
 // 连接数据库
 mongoose.connect(mburl, {
 	useNewUrlParser: true,
@@ -22,9 +30,6 @@ mongoose.connect(mburl, {
 })
 // 
 
-
-app.use(json())
-app.use(bodyParser())
 
 
 
