@@ -6,7 +6,7 @@ const Username = require('../../models/username.js')
 const Prefer = require('../../models/preferen')
 
 // 上传图片
-const {upload} = require('../../oss/oss')
+const { upload, uploadImg } = require('../../oss/oss')
 
 const initData = require('../../config/init')
 
@@ -82,7 +82,9 @@ router.post('/login', async (ctx) => {
 })
 
 router.post('/prefer', upload.single('file'), async ctx => {
-	console.log('111')
+	uploadImg(ctx.req.file.path).then(res => {
+		console.log(res)
+	})
 })
 
 module.exports = router.routes()

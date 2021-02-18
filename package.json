@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/YCH-3ye/meituan#readme",
   "dependencies": {
+    "ali-oss": "^6.13.2",
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
     "koa-cors": "^0.0.16",
