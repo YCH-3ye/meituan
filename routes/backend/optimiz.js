@@ -6,7 +6,9 @@ const Username = require('../../models/username.js')
 const Prefer = require('../../models/preferen')
 
 // 上传图片
-const { upload, uploadImg } = require('../../oss/oss')
+const { upload } = require('../../oss/oss')
+
+const { uploading } = require('../../config/uploads')
 
 const initData = require('../../config/init')
 
@@ -68,23 +70,28 @@ router.post('/login', async (ctx) => {
 		init.tips('参数填写不正确', 202)
 		return false
 	}
-	await Username.find({
+	const listData = await Username.find({
 		name,
 		password,
 	})
-	.then((res) => {
-		console.log(res)
-		init.listing('成功')
-	}).catch((res) => {
-		console.log(res)
-		init.tips('失败', 500)
-	})
+	console.log(listData)
+	if(listData.length === 0){
+		new initData(ctx).tips('账号或密码错误',202)
+	}else{
+		new initData(ctx,'SUCCESS', listData[0].openId, 200).listing()
+	}
 })
 
 router.post('/prefer', upload.single('file'), async ctx => {
-	uploadImg(ctx.req.file.path).then(res => {
-		console.log(res)
-	})
+	console.log('为你优选')
+	let { title, lable } = ctx.req.body
+	console.log(title)
+	console.log(lable)
+	let obj = {
+		title,
+		lable
+	}
+	new uploading(ctx, obj, 'image', Prefer).resultData()
 })
 
 module.exports = router.routes()

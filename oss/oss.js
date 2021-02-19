@@ -23,12 +23,10 @@ let upload = multer({storage})
 
 // 上传图片到oss
 let uploadImg = function(image) {
-  console.log(image)
   return new Promise((resolve, rejects) => {
-    console.log(image)
     client.put('meituan/' + image, image)
     .then(res => {
-      console.log(res)
+      resolve(res)
     })
     .catch(err => {
       console.log(err)
