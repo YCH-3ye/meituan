@@ -13,7 +13,10 @@ let client = new OSS({
 
 
 let storage = multer.diskStorage({
-  destination: path.resolve('public/upload'),
+  destination: (req,file,cb)=>{
+		cb(null,'public/upload/')
+	},
+  // destination: path.resolve('public/upload'),
   filename: (ctx, file, cb)=>{
     let fileFormat = (file.originalname).split('.')
     cb(null, Date.now() + '.' + fileFormat[fileFormat.length-1]);

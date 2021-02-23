@@ -45,9 +45,13 @@ app.use(router.allowedMethods())
 // 引入optimiz文件里的路由
 const banner = require('./routes/backend/optimiz.js')
 
+// 获取为你优选
+const forshop = require('./routes/foreend/foroptimiz.js')
+
 // 注册路由中间件
 
 router.use('/api/banner', banner)
+router.use('/api/forshop', forshop)
 
 
 

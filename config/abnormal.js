@@ -13,6 +13,14 @@ let abnormal = async(ctx, next) => {
       }
     } else {
       console.log('未知错误')
+      console.log(error)
+      if(err.field){
+        ctx.body = {
+           msg:'图片参数不正确'
+        }
+        ctx.status = 400
+        return false
+      }
       ctx.body = {
         msg: '服务器发生错误'
       }

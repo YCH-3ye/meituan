@@ -11,6 +11,10 @@ const { upload } = require('../../oss/oss')
 const { uploading } = require('../../config/uploads')
 
 const initData = require('../../config/init')
+function isEmpty(str) {
+	str = str.replace(/ /g, '')
+	return str.length
+}
 
 //  注册路由
 router.post('/register', async ctx => {
@@ -21,7 +25,7 @@ router.post('/register', async ctx => {
 		init.tips('不能为空', 202)
 		return false
 	}
-	if(name === undefined ||  password === undefined) {
+	if(name === undefined || isEmpty(name) ||  password === undefined || isEmpty(password)) {
 		const init = new initData(ctx)
 		init.tips('参数填写不正确', 202)
 		return false
@@ -47,7 +51,7 @@ router.post('/register', async ctx => {
 		password,
 		openId
 	})
-	await user.save()
+	user.save()
 	.then((res) => {
 		const init = new initData(ctx)
 		init.listing('成功')
@@ -66,7 +70,7 @@ router.post('/login', async (ctx) => {
 		init.tips('帐号密码不能为空', 202)
 		return false
 	}
-	if(name === undefined || password === undefined) {
+	if(name === undefined || isEmpty(name) || password === undefined || isEmpty(password) ) {
 		init.tips('参数填写不正确', 202)
 		return false
 	}
@@ -84,9 +88,18 @@ router.post('/login', async (ctx) => {
 
 router.post('/prefer', upload.single('file'), async ctx => {
 	console.log('为你优选')
+	console.log(ctx.req.file)
 	let { title, lable } = ctx.req.body
 	console.log(title)
 	console.log(lable)
+	if(title === '' || isEmpty(title) || lable === '' || isEmpty(lable)) {
+		new initData(ctx).tips('商品参数为空',202)
+		return
+	}
+	if(ctx.req.file === undefined) {
+		new initData(ctx).tips('请上传图片',202)
+		return
+	}
 	let obj = {
 		title,
 		lable
