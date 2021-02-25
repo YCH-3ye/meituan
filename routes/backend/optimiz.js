@@ -12,8 +12,9 @@ const { uploading } = require('../../config/uploads')
 
 const initData = require('../../config/init')
 function isEmpty(str) {
-	str = str.replace(/ /g, '')
-	return str.length
+	console.log(str)
+	str = str.trim()
+	return !str.length
 }
 
 //  注册路由
@@ -106,5 +107,40 @@ router.post('/prefer', upload.single('file'), async ctx => {
 	}
 	new uploading(ctx, obj, 'image', Prefer).resultData()
 })
+
+// 删除为你优选：指定数据
+router.post('/deleprefer', async ctx => {
+	let {ids} = ctx.request.body
+	const init = new initData(ctx)
+	if(ids === '') {
+		init.tips('帐号密码不能为空', 202)
+	}
+	try {
+		let listdata = await delPre(ids)
+		console.log('listdata', listdata)
+		if(listdata.deletedCount === 1) {
+			new initData(ctx).listing()
+		} else {
+			new initData(ctx).tips('删除失败',400)
+		}
+	}catch(e) {
+		init.tips('系统错误', 500)
+	}
+
+	function delPre(ids) {
+		console.log('ids', ids)
+		return new Promise((resolve, reject) => {
+			Prefer.deleteOne({_id: ids}, (err, res) => {
+				console.log(err, res)
+				if(err) {
+					reject(err)
+				} else {
+					resolve(res)
+				}
+			})
+		})
+	}
+})
+
 
 module.exports = router.routes()
