@@ -9,13 +9,18 @@ class uploading {
     this.model = model
   }
   async resultData() {
+    // this.pull('SUCCESS', optData, 201)
+    console.log('start',this.ctx)
     let upImg = await this.upImgFun()
+    console.log('end', this.ctx) 
+    console.log('---------',upImg)
+    this.pull('SUCCESS', [], 201)
+    return
     console.log(upImg)
     this.obj[this.image] = upImg
     try {
       let optData = await this.saveData(this.obj)
       console.log(optData)
-      this.pull('SUCCESS', optData, 201)
     } catch(e) {
       this.pull('上传失败', '', 500)
     }
@@ -24,6 +29,7 @@ class uploading {
   upImgFun() {
     return new Promise((resolve, reject) => {
       uploadImg(this.ctx.req.file.path).then(res => {
+        console.log('12',res)
         resolve(res.url)
       }).catch(err => {
         console.log(err)
@@ -46,6 +52,8 @@ class uploading {
 
   // 响应
   pull(msg, data, code) {
+    console.log(msg, data, code)
+    console.log('==========', this.ctx.body)
     this.ctx.body = {
       msg: msg,
       data: data

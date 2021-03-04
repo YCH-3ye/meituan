@@ -6,7 +6,7 @@ let client = new OSS({
   region: 'oss-cn-shanghai',
   bucket: 'shye-oss',
   accessKeyId: 'LTAI4GKZpYMedrvySd95ZB3U',
-  accessKeySecret: 'kKNn8KiI9pJYj362GXIxtEerO1H3TY'
+  accessKeySecret: 'kKNn8KiI9pJYj362GXIxtEerO1H3TY',
 });
 
 
@@ -29,7 +29,7 @@ let uploadImg = function(image) {
   return new Promise((resolve, rejects) => {
     client.put('meituan/' + image, image)
     .then(res => {
-      resolve(res)
+      resolve(res.url)
     })
     .catch(err => {
       console.log(err)
