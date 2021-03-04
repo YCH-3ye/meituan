@@ -53,7 +53,43 @@ class uploading {
     this.ctx.status = code
   }
 }
+// 更改为你优选
+class modify extends uploading {
+  constructor(ctx, obj, image, Prefer, ids) {
+    super(ctx, obj, image, Prefer)
+    this.ids = ids
+  }
+  // 修改了图片
+  async preference() {
+    // 等待图片上传到阿里云oss
+    let upImg = await this.upImgFun()
+    log('商家修改的新图片地址'+ upImg)
+    try {
+      let toUpdate = await this.toUpdate(upImg)
+      this.pull('SUCCESS', [], 201)
+    } catch(e) {
+      this.pull('修改失败', [], 500)
+    }
+  }
+
+  // 更新集合里的数据
+  toUpdate(upImg) {
+    return new Promise((resolve, reject) => {
+      this.obj[this.image] = upImg
+      this.Prefer.findByIdAndUpdate({_id: this.ids}, this.obj, (err, res) => {
+        if(err) {
+          reject(err)
+          this.pull('修改失败', [], 500)
+        }else {
+          resolve(res)
+          this.pull('SUCCESS', [], 201)
+        }
+      })
+    })
+  }
+}
 
 module.exports = {
-  uploading
+  uploading,
+  modify
 }

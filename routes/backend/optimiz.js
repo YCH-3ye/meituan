@@ -8,7 +8,7 @@ const Prefer = require('../../models/preferen')
 // 上传图片
 const { upload } = require('../../oss/oss')
 
-const { uploading } = require('../../config/uploads')
+const { uploading, modify } = require('../../config/uploads')
 
 const initData = require('../../config/init')
 function isEmpty(str) {
@@ -142,5 +142,26 @@ router.post('/deleprefer', async ctx => {
 	}
 })
 
+// 更新为你优先
+router.post('/updataprefer', upload.single('file'), async ctx => {
+	console.log('12323', ctx.req.file)
+	let { file, title, lable, ids } = ctx.req.body;
+
+	let obj = {
+		title,
+		lable
+	}
+	if(title === '' || isEmpty(title) || lable === '' || isEmpty(lable)) {
+		new initData(ctx).tips('商品参数为空',202)
+		return
+	}
+	if(file === undefined) {
+		// 商家修改了图片
+		await new modify(ctx, obj, 'image', Prefer, ids).preference()
+	} else {
+		// 商家未修改图片
+		await new modify(ctx, obj, 'image', Prefer, ids).toUpdate(file)
+	}
+})
 
 module.exports = router.routes()
