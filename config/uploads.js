@@ -10,17 +10,11 @@ class uploading {
   }
   async resultData() {
     // this.pull('SUCCESS', optData, 201)
-    console.log('start',this.ctx)
     let upImg = await this.upImgFun()
-    console.log('end', this.ctx) 
-    console.log('---------',upImg)
-    this.pull('SUCCESS', [], 201)
-    return
-    console.log(upImg)
     this.obj[this.image] = upImg
     try {
       let optData = await this.saveData(this.obj)
-      console.log(optData)
+      this.pull('SUCCESS', optData, 201)
     } catch(e) {
       this.pull('上传失败', '', 500)
     }
@@ -29,8 +23,7 @@ class uploading {
   upImgFun() {
     return new Promise((resolve, reject) => {
       uploadImg(this.ctx.req.file.path).then(res => {
-        console.log('12',res)
-        resolve(res.url)
+        resolve(res)
       }).catch(err => {
         console.log(err)
       })
@@ -71,7 +64,7 @@ class modify extends uploading {
   async preference() {
     // 等待图片上传到阿里云oss
     let upImg = await this.upImgFun()
-    log('商家修改的新图片地址'+ upImg)
+    console.log('商家修改的新图片地址'+ upImg)
     try {
       let toUpdate = await this.toUpdate(upImg)
       this.pull('SUCCESS', [], 201)
@@ -84,7 +77,8 @@ class modify extends uploading {
   toUpdate(upImg) {
     return new Promise((resolve, reject) => {
       this.obj[this.image] = upImg
-      this.Prefer.findByIdAndUpdate({_id: this.ids}, this.obj, (err, res) => {
+      this.model.findByIdAndUpdate({_id: this.ids}, this.obj, (err, res) => {
+        console.log('----',  err, res)
         if(err) {
           reject(err)
           this.pull('修改失败', [], 500)

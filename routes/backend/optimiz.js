@@ -105,7 +105,7 @@ router.post('/prefer', upload.single('file'), async ctx => {
 		title,
 		lable
 	}
-	new uploading(ctx, obj, 'image', Prefer).resultData()
+	await new uploading(ctx, obj, 'image', Prefer).resultData()
 })
 
 // 删除为你优选：指定数据
